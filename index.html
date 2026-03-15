@@ -41,7 +41,10 @@
 
     <div class="right">
 
-      <a href="#"><img src="/ecommerce-product-page/images/icon-cart.svg" alt="cart" class="cart"></a>
+      <button type="button" class="cart_toggle" aria-label="Open cart">
+        <img src="/ecommerce-product-page/images/icon-cart.svg" alt="cart" class="cart">
+        <span class="cart_count" aria-live="polite">0</span>
+      </button>
 
       <a href="#"><img src="/ecommerce-product-page/images/image-avatar.png" alt="avatar" class="avatar"></a>
 
@@ -51,30 +54,169 @@
 
   </header>
 
+  <section class="cart_panel" hidden>
+    <h2 class="cart_panel_header">Cart</h2>
+    <div class="cart_panel_body">
+      <p class="empty_cart_message">Your cart is empty.</p>
+
+      <div class="cart_item" hidden>
+        <img src="/ecommerce-product-page/images/image-product-1-thumbnail.jpg" alt="Product thumbnail" class="cart_item_thumbnail">
+        <div class="cart_item_details">
+          <p class="cart_item_name">Fall Limited Edition Sneakers</p>
+          <p class="cart_item_pricing">
+            $125.00 x <span class="cart_item_quantity">0</span>
+            <strong class="cart_item_total">$0.00</strong>
+          </p>
+        </div>
+        <button type="button" class="remove_item" aria-label="Remove item from cart">
+          <img src="/ecommerce-product-page/images/icon-delete.svg" alt="delete item">
+        </button>
+      </div>
+
+      <button type="button" class="checkout_button" hidden>Checkout</button>
+    </div>
+  </section>
+
+  <section class="main">
 
 
+    <div class="product_image">
+      <img src="/ecommerce-product-page/images/image-product-1.jpg" alt="product" class="main_image">
+      <div class="thumbnails">
+        <img src="/ecommerce-product-page/images/image-product-1-thumbnail.jpg" alt="thumbnail 1" class="thumbnail">
+        <img src="/ecommerce-product-page/images/image-product-2-thumbnail.jpg" alt="thumbnail 2" class="thumbnail">
+        <img src="/ecommerce-product-page/images/image-product-3-thumbnail.jpg" alt="thumbnail 3" class="thumbnail">
+        <img src="/ecommerce-product-page/images/image-product-4-thumbnail.jpg" alt="thumbnail 4" class="thumbnail">
+      </div>
+    </div>
+
+    <div class="product_info">
 
 
+      <span class="cmp">Sneaker Company</span>
 
+      <h1 class="prod_name">Fall Limited Edition Sneakers</h1>
 
-  Sneaker Company
+      <p class="prod_desc">These low-profile sneakers are your perfect casual wear companion. Featuring a
+        durable rubber outer sole, they’ll withstand everything the weather can offer.</p>
 
-  Fall Limited Edition Sneakers
+      <div class="price">
+        <span class="current_price">$125.00</span>
+        <span class="discount">50%</span>
+      </div>
 
-  These low-profile sneakers are your perfect casual wear companion. Featuring a
-  durable rubber outer sole, they’ll withstand everything the weather can offer.
+      <span class="original_price">$250.00</span>
 
-  $125.00
-  50%
-  $250.00
-
-  0
-  Add to cart
+      <div class="add_to_cart">
+        <div class="quantity_selector">
+          <button type="button" class="decrease" aria-label="Decrease quantity">-</button>
+          <span class="quantity">0</span>
+          <button type="button" class="increase" aria-label="Increase quantity">+</button>
+        </div>
+        <button type="button" class="add_to_cart_button">Add to cart</button>
+      </div>
+    </div>
+  </section>
 
   <div class="attribution">
     Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
-    Coded by <a href="#">Your Name Here</a>.
+    Coded by <a href="https://github.com/Mian-Ahmed-Raza/">Mian Ahmed Raza</a>.
   </div>
+
+  <script>
+  const mainImage = document.querySelector('.main_image');
+  const thumbnails = document.querySelectorAll('.thumbnail');
+  const decreaseButton = document.querySelector('.decrease');
+  const increaseButton = document.querySelector('.increase');
+  const quantityElement = document.querySelector('.quantity');
+  const addToCartButton = document.querySelector('.add_to_cart_button');
+  const cartToggleButton = document.querySelector('.cart_toggle');
+  const cartCount = document.querySelector('.cart_count');
+  const cartPanel = document.querySelector('.cart_panel');
+  const emptyCartMessage = document.querySelector('.empty_cart_message');
+  const cartItem = document.querySelector('.cart_item');
+  const cartItemQuantity = document.querySelector('.cart_item_quantity');
+  const cartItemTotal = document.querySelector('.cart_item_total');
+  const checkoutButton = document.querySelector('.checkout_button');
+  const removeItemButton = document.querySelector('.remove_item');
+
+  const ITEM_PRICE = 125;
+
+  let selectedQuantity = 0;
+  let cartQuantity = 0;
+
+  function formatCurrency(value) {
+    return `$${value.toFixed(2)}`;
+  }
+
+  function updateSelectedQuantity() {
+    quantityElement.textContent = String(selectedQuantity);
+  }
+
+  function updateCartUI() {
+    const hasItems = cartQuantity > 0;
+    cartCount.textContent = String(cartQuantity);
+    cartCount.classList.toggle('visible', hasItems);
+
+    emptyCartMessage.hidden = hasItems;
+    cartItem.hidden = !hasItems;
+    checkoutButton.hidden = !hasItems;
+
+    if (hasItems) {
+      cartItemQuantity.textContent = String(cartQuantity);
+      cartItemTotal.textContent = formatCurrency(ITEM_PRICE * cartQuantity);
+    }
+  }
+
+  thumbnails.forEach((thumbnail) => {
+    thumbnail.addEventListener('click', () => {
+      mainImage.src = thumbnail.src.replace('-thumbnail', '');
+    });
+  });
+
+  decreaseButton.addEventListener('click', () => {
+    selectedQuantity = Math.max(0, selectedQuantity - 1);
+    updateSelectedQuantity();
+  });
+
+  increaseButton.addEventListener('click', () => {
+    selectedQuantity += 1;
+    updateSelectedQuantity();
+  });
+
+  addToCartButton.addEventListener('click', () => {
+    if (selectedQuantity === 0) {
+      return;
+    }
+
+    cartQuantity += selectedQuantity;
+    selectedQuantity = 0;
+    updateSelectedQuantity();
+    updateCartUI();
+  });
+
+  cartToggleButton.addEventListener('click', () => {
+    cartPanel.hidden = !cartPanel.hidden;
+  });
+
+  removeItemButton.addEventListener('click', () => {
+    cartQuantity = 0;
+    updateCartUI();
+  });
+
+  document.addEventListener('click', (event) => {
+    if (
+      !cartPanel.hidden
+      && !cartPanel.contains(event.target)
+      && !cartToggleButton.contains(event.target)
+    ) {
+      cartPanel.hidden = true;
+    }
+  });
+
+  updateSelectedQuantity();
+  updateCartUI();
+  </script>
 </body>
 
 </html>
