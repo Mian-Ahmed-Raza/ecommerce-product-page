@@ -82,7 +82,15 @@
 
 
     <div class="product_image">
-      <img src="/ecommerce-product-page/images/image-product-1.jpg" alt="product" class="main_image">
+      <div class="main_image_wrapper">
+        <button type="button" class="image_nav prev_image" aria-label="Previous product image">
+          <img src="/ecommerce-product-page/images/icon-previous.svg" alt="previous">
+        </button>
+        <img src="/ecommerce-product-page/images/image-product-1.jpg" alt="product" class="main_image">
+        <button type="button" class="image_nav next_image" aria-label="Next product image">
+          <img src="/ecommerce-product-page/images/icon-next.svg" alt="next">
+        </button>
+      </div>
       <div class="thumbnails">
         <img src="/ecommerce-product-page/images/image-product-1-thumbnail.jpg" alt="thumbnail 1" class="thumbnail">
         <img src="/ecommerce-product-page/images/image-product-2-thumbnail.jpg" alt="thumbnail 2" class="thumbnail">
@@ -131,6 +139,8 @@
   <script>
     const mainImage = document.querySelector('.main_image');
     const thumbnails = document.querySelectorAll('.thumbnail');
+    const previousImageButton = document.querySelector('.prev_image');
+    const nextImageButton = document.querySelector('.next_image');
     const decreaseButton = document.querySelector('.decrease');
     const increaseButton = document.querySelector('.increase');
     const quantityElement = document.querySelector('.quantity');
@@ -146,9 +156,11 @@
     const removeItemButton = document.querySelector('.remove_item');
 
     const ITEM_PRICE = 125;
+    const productImages = Array.from(thumbnails, (thumbnail) => thumbnail.src.replace('-thumbnail', ''));
 
     let selectedQuantity = 0;
     let cartQuantity = 0;
+    let currentImageIndex = 0;
 
     function formatCurrency(value) {
       return `$${value.toFixed(2)}`;
@@ -173,10 +185,28 @@
       }
     }
 
-    thumbnails.forEach((thumbnail) => {
-      thumbnail.addEventListener('click', () => {
-        mainImage.src = thumbnail.src.replace('-thumbnail', '');
+    function updateProductImage(newIndex) {
+      const totalImages = productImages.length;
+      currentImageIndex = (newIndex + totalImages) % totalImages;
+      mainImage.src = productImages[currentImageIndex];
+
+      thumbnails.forEach((thumbnail, index) => {
+        thumbnail.classList.toggle('active', index === currentImageIndex);
       });
+    }
+
+    thumbnails.forEach((thumbnail, index) => {
+      thumbnail.addEventListener('click', () => {
+        updateProductImage(index);
+      });
+    });
+
+    previousImageButton.addEventListener('click', () => {
+      updateProductImage(currentImageIndex - 1);
+    });
+
+    nextImageButton.addEventListener('click', () => {
+      updateProductImage(currentImageIndex + 1);
     });
 
     decreaseButton.addEventListener('click', () => {
@@ -221,6 +251,7 @@
 
     updateSelectedQuantity();
     updateCartUI();
+    updateProductImage(0);
   </script>
 </body>
 
