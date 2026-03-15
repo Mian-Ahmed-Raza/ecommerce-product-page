@@ -31,7 +31,7 @@ Users should be able to:
 ### Links
 
 - Solution URL: [Solution](https://github.com/Mian-Ahmed-Raza/my-portfolio-react.git)
-- Live Site URL: [Live Site](https://your-live-site-url.com)
+- Live Site URL: [Live Site](https://productlandingpag.netlify.app/)
 
 
 ## Author
