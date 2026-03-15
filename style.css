@@ -244,6 +244,96 @@ a{
     cursor: pointer;
 }
 
+.lightbox_overlay{
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.78);
+    z-index: 70;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+}
+
+.lightbox_modal{
+    position: static;
+    inset: auto;
+    width: min(560px, 92vw);
+    margin: 0;
+    border: none;
+    padding: 0;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.lightbox_modal .close_lightbox{
+    border: none;
+    background: transparent;
+    width: fit-content;
+    align-self: flex-end;
+    cursor: pointer;
+}
+
+.lightbox_modal .close_lightbox img{
+    width: 20px;
+    filter: brightness(0) invert(1);
+}
+
+.lightbox_modal .lightbox_main_image_wrapper{
+    position: relative;
+}
+
+.lightbox_modal .lightbox_main_image_wrapper .image_nav{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    border: none;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.lightbox_modal .lightbox_main_image_wrapper .lightbox_prev_image{
+    left: -24px;
+}
+
+.lightbox_modal .lightbox_main_image_wrapper .lightbox_next_image{
+    right: -24px;
+}
+
+.lightbox_modal .lightbox_main_image{
+    width: 100%;
+    border-radius: 14px;
+}
+
+.lightbox_modal .lightbox_thumbnails{
+    width: 88%;
+    align-self: center;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.lightbox_modal .lightbox_thumbnails .lightbox_thumbnail{
+    width: 22%;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    background-color: white;
+}
+
+.lightbox_modal .lightbox_thumbnails .lightbox_thumbnail:hover,
+.lightbox_modal .lightbox_thumbnails .lightbox_thumbnail.active{
+    border: 2px solid var(--orange);
+    opacity: 0.5;
+}
+
 .main{
     width: 70%;
     margin: 0 auto;
@@ -496,6 +586,28 @@ a{
 
     .main .product_image .thumbnails{
         display: none;
+    }
+
+    .lightbox_modal{
+        width: min(460px, 94vw);
+    }
+
+    .lightbox_modal .lightbox_main_image_wrapper .lightbox_prev_image{
+        left: 10px;
+    }
+
+    .lightbox_modal .lightbox_main_image_wrapper .lightbox_next_image{
+        right: 10px;
+    }
+
+    .lightbox_modal .lightbox_main_image_wrapper .image_nav{
+        width: 42px;
+        height: 42px;
+    }
+
+    .lightbox_modal .lightbox_thumbnails{
+        width: 100%;
+        gap: 10px;
     }
 
     .main .product_info{

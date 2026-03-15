@@ -151,6 +151,31 @@
     </div>
   </section>
 
+  <section class="lightbox_overlay" hidden>
+    <dialog class="lightbox_modal" open aria-label="Product image gallery">
+      <button type="button" class="close_lightbox" aria-label="Close image gallery">
+        <img src="./images/icon-close.svg" alt="close gallery">
+      </button>
+
+      <div class="lightbox_main_image_wrapper">
+        <button type="button" class="image_nav lightbox_prev_image" aria-label="Previous image in gallery">
+          <img src="./images/icon-previous.svg" alt="previous">
+        </button>
+        <img src="./images/image-product-1.jpg" alt="product lightbox" class="lightbox_main_image">
+        <button type="button" class="image_nav lightbox_next_image" aria-label="Next image in gallery">
+          <img src="./images/icon-next.svg" alt="next">
+        </button>
+      </div>
+
+      <div class="lightbox_thumbnails">
+        <img src="./images/image-product-1-thumbnail.jpg" alt="gallery thumbnail 1" class="lightbox_thumbnail" data-index="0">
+        <img src="./images/image-product-2-thumbnail.jpg" alt="gallery thumbnail 2" class="lightbox_thumbnail" data-index="1">
+        <img src="./images/image-product-3-thumbnail.jpg" alt="gallery thumbnail 3" class="lightbox_thumbnail" data-index="2">
+        <img src="./images/image-product-4-thumbnail.jpg" alt="gallery thumbnail 4" class="lightbox_thumbnail" data-index="3">
+      </div>
+    </dialog>
+  </section>
+
   <div class="attribution">
     Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
     Coded by <a href="https://github.com/Mian-Ahmed-Raza/">Mian Ahmed Raza</a>.
@@ -159,6 +184,12 @@
   <script>
     const mainImage = document.querySelector('.main_image');
     const thumbnails = document.querySelectorAll('.thumbnail');
+    const lightboxOverlay = document.querySelector('.lightbox_overlay');
+    const lightboxMainImage = document.querySelector('.lightbox_main_image');
+    const lightboxCloseButton = document.querySelector('.close_lightbox');
+    const lightboxPreviousImageButton = document.querySelector('.lightbox_prev_image');
+    const lightboxNextImageButton = document.querySelector('.lightbox_next_image');
+    const lightboxThumbnails = document.querySelectorAll('.lightbox_thumbnail');
     const menuToggleButton = document.querySelector('.menu_toggle');
     const sidebarMenu = document.querySelector('.sidebar_menu');
     const sidebarBackdrop = document.querySelector('.sidebar_backdrop');
@@ -186,6 +217,8 @@
     let selectedQuantity = 0;
     let cartQuantity = 0;
     let currentImageIndex = 0;
+    let isSidebarOpen = false;
+    let isLightboxOpen = false;
 
     function formatCurrency(value) {
       return `$${value.toFixed(2)}`;
@@ -210,26 +243,49 @@
       }
     }
 
+    function updateBodyScrollLock() {
+      document.body.style.overflow = (isSidebarOpen || isLightboxOpen) ? 'hidden' : '';
+    }
+
     function updateProductImage(newIndex) {
       const totalImages = productImages.length;
       currentImageIndex = (newIndex + totalImages) % totalImages;
       mainImage.src = productImages[currentImageIndex];
+      lightboxMainImage.src = productImages[currentImageIndex];
 
       thumbnails.forEach((thumbnail, index) => {
         thumbnail.classList.toggle('active', index === currentImageIndex);
       });
+
+      lightboxThumbnails.forEach((thumbnail, index) => {
+        thumbnail.classList.toggle('active', index === currentImageIndex);
+      });
+    }
+
+    function openLightbox() {
+      lightboxOverlay.hidden = false;
+      isLightboxOpen = true;
+      updateBodyScrollLock();
+    }
+
+    function closeLightbox() {
+      lightboxOverlay.hidden = true;
+      isLightboxOpen = false;
+      updateBodyScrollLock();
     }
 
     function openSidebar() {
       sidebarMenu.hidden = false;
       sidebarBackdrop.hidden = false;
-      document.body.style.overflow = 'hidden';
+      isSidebarOpen = true;
+      updateBodyScrollLock();
     }
 
     function closeSidebar() {
       sidebarMenu.hidden = true;
       sidebarBackdrop.hidden = true;
-      document.body.style.overflow = '';
+      isSidebarOpen = false;
+      updateBodyScrollLock();
     }
 
     menuToggleButton.addEventListener('click', openSidebar);
@@ -252,6 +308,15 @@
       }
     });
 
+    mainImage.addEventListener('click', openLightbox);
+    lightboxCloseButton.addEventListener('click', closeLightbox);
+
+    lightboxOverlay.addEventListener('click', (event) => {
+      if (event.target === lightboxOverlay) {
+        closeLightbox();
+      }
+    });
+
     thumbnails.forEach((thumbnail, index) => {
       thumbnail.addEventListener('click', () => {
         updateProductImage(index);
@@ -264,6 +329,20 @@
 
     nextImageButton.addEventListener('click', () => {
       updateProductImage(currentImageIndex + 1);
+    });
+
+    lightboxPreviousImageButton.addEventListener('click', () => {
+      updateProductImage(currentImageIndex - 1);
+    });
+
+    lightboxNextImageButton.addEventListener('click', () => {
+      updateProductImage(currentImageIndex + 1);
+    });
+
+    lightboxThumbnails.forEach((thumbnail, index) => {
+      thumbnail.addEventListener('click', () => {
+        updateProductImage(index);
+      });
     });
 
     decreaseButton.addEventListener('click', () => {
@@ -303,6 +382,20 @@
         && !cartToggleButton.contains(event.target)
       ) {
         cartPanel.hidden = true;
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !lightboxOverlay.hidden) {
+        closeLightbox();
+      }
+
+      if (event.key === 'ArrowLeft' && !lightboxOverlay.hidden) {
+        updateProductImage(currentImageIndex - 1);
+      }
+
+      if (event.key === 'ArrowRight' && !lightboxOverlay.hidden) {
+        updateProductImage(currentImageIndex + 1);
       }
     });
 
