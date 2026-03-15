@@ -60,7 +60,8 @@
       <p class="empty_cart_message">Your cart is empty.</p>
 
       <div class="cart_item" hidden>
-        <img src="/ecommerce-product-page/images/image-product-1-thumbnail.jpg" alt="Product thumbnail" class="cart_item_thumbnail">
+        <img src="/ecommerce-product-page/images/image-product-1-thumbnail.jpg" alt="Product thumbnail"
+          class="cart_item_thumbnail">
         <div class="cart_item_details">
           <p class="cart_item_name">Fall Limited Edition Sneakers</p>
           <p class="cart_item_pricing">
@@ -100,12 +101,16 @@
       <p class="prod_desc">These low-profile sneakers are your perfect casual wear companion. Featuring a
         durable rubber outer sole, they’ll withstand everything the weather can offer.</p>
 
-      <div class="price">
-        <span class="current_price">$125.00</span>
-        <span class="discount">50%</span>
-      </div>
+      <div class="whole_price">
 
-      <span class="original_price">$250.00</span>
+        <div class="price">
+          <span class="current_price">$125.00</span>
+          <span class="discount">50%</span>
+        </div>
+
+        <span class="original_price">$250.00</span>
+
+      </div>
 
       <div class="add_to_cart">
         <div class="quantity_selector">
@@ -124,98 +129,98 @@
   </div>
 
   <script>
-  const mainImage = document.querySelector('.main_image');
-  const thumbnails = document.querySelectorAll('.thumbnail');
-  const decreaseButton = document.querySelector('.decrease');
-  const increaseButton = document.querySelector('.increase');
-  const quantityElement = document.querySelector('.quantity');
-  const addToCartButton = document.querySelector('.add_to_cart_button');
-  const cartToggleButton = document.querySelector('.cart_toggle');
-  const cartCount = document.querySelector('.cart_count');
-  const cartPanel = document.querySelector('.cart_panel');
-  const emptyCartMessage = document.querySelector('.empty_cart_message');
-  const cartItem = document.querySelector('.cart_item');
-  const cartItemQuantity = document.querySelector('.cart_item_quantity');
-  const cartItemTotal = document.querySelector('.cart_item_total');
-  const checkoutButton = document.querySelector('.checkout_button');
-  const removeItemButton = document.querySelector('.remove_item');
+    const mainImage = document.querySelector('.main_image');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const decreaseButton = document.querySelector('.decrease');
+    const increaseButton = document.querySelector('.increase');
+    const quantityElement = document.querySelector('.quantity');
+    const addToCartButton = document.querySelector('.add_to_cart_button');
+    const cartToggleButton = document.querySelector('.cart_toggle');
+    const cartCount = document.querySelector('.cart_count');
+    const cartPanel = document.querySelector('.cart_panel');
+    const emptyCartMessage = document.querySelector('.empty_cart_message');
+    const cartItem = document.querySelector('.cart_item');
+    const cartItemQuantity = document.querySelector('.cart_item_quantity');
+    const cartItemTotal = document.querySelector('.cart_item_total');
+    const checkoutButton = document.querySelector('.checkout_button');
+    const removeItemButton = document.querySelector('.remove_item');
 
-  const ITEM_PRICE = 125;
+    const ITEM_PRICE = 125;
 
-  let selectedQuantity = 0;
-  let cartQuantity = 0;
+    let selectedQuantity = 0;
+    let cartQuantity = 0;
 
-  function formatCurrency(value) {
-    return `$${value.toFixed(2)}`;
-  }
-
-  function updateSelectedQuantity() {
-    quantityElement.textContent = String(selectedQuantity);
-  }
-
-  function updateCartUI() {
-    const hasItems = cartQuantity > 0;
-    cartCount.textContent = String(cartQuantity);
-    cartCount.classList.toggle('visible', hasItems);
-
-    emptyCartMessage.hidden = hasItems;
-    cartItem.hidden = !hasItems;
-    checkoutButton.hidden = !hasItems;
-
-    if (hasItems) {
-      cartItemQuantity.textContent = String(cartQuantity);
-      cartItemTotal.textContent = formatCurrency(ITEM_PRICE * cartQuantity);
+    function formatCurrency(value) {
+      return `$${value.toFixed(2)}`;
     }
-  }
 
-  thumbnails.forEach((thumbnail) => {
-    thumbnail.addEventListener('click', () => {
-      mainImage.src = thumbnail.src.replace('-thumbnail', '');
+    function updateSelectedQuantity() {
+      quantityElement.textContent = String(selectedQuantity);
+    }
+
+    function updateCartUI() {
+      const hasItems = cartQuantity > 0;
+      cartCount.textContent = String(cartQuantity);
+      cartCount.classList.toggle('visible', hasItems);
+
+      emptyCartMessage.hidden = hasItems;
+      cartItem.hidden = !hasItems;
+      checkoutButton.hidden = !hasItems;
+
+      if (hasItems) {
+        cartItemQuantity.textContent = String(cartQuantity);
+        cartItemTotal.textContent = formatCurrency(ITEM_PRICE * cartQuantity);
+      }
+    }
+
+    thumbnails.forEach((thumbnail) => {
+      thumbnail.addEventListener('click', () => {
+        mainImage.src = thumbnail.src.replace('-thumbnail', '');
+      });
     });
-  });
 
-  decreaseButton.addEventListener('click', () => {
-    selectedQuantity = Math.max(0, selectedQuantity - 1);
-    updateSelectedQuantity();
-  });
+    decreaseButton.addEventListener('click', () => {
+      selectedQuantity = Math.max(0, selectedQuantity - 1);
+      updateSelectedQuantity();
+    });
 
-  increaseButton.addEventListener('click', () => {
-    selectedQuantity += 1;
-    updateSelectedQuantity();
-  });
+    increaseButton.addEventListener('click', () => {
+      selectedQuantity += 1;
+      updateSelectedQuantity();
+    });
 
-  addToCartButton.addEventListener('click', () => {
-    if (selectedQuantity === 0) {
-      return;
-    }
+    addToCartButton.addEventListener('click', () => {
+      if (selectedQuantity === 0) {
+        return;
+      }
 
-    cartQuantity += selectedQuantity;
-    selectedQuantity = 0;
+      cartQuantity += selectedQuantity;
+      selectedQuantity = 0;
+      updateSelectedQuantity();
+      updateCartUI();
+    });
+
+    cartToggleButton.addEventListener('click', () => {
+      cartPanel.hidden = !cartPanel.hidden;
+    });
+
+    removeItemButton.addEventListener('click', () => {
+      cartQuantity = 0;
+      updateCartUI();
+    });
+
+    document.addEventListener('click', (event) => {
+      if (
+        !cartPanel.hidden
+        && !cartPanel.contains(event.target)
+        && !cartToggleButton.contains(event.target)
+      ) {
+        cartPanel.hidden = true;
+      }
+    });
+
     updateSelectedQuantity();
     updateCartUI();
-  });
-
-  cartToggleButton.addEventListener('click', () => {
-    cartPanel.hidden = !cartPanel.hidden;
-  });
-
-  removeItemButton.addEventListener('click', () => {
-    cartQuantity = 0;
-    updateCartUI();
-  });
-
-  document.addEventListener('click', (event) => {
-    if (
-      !cartPanel.hidden
-      && !cartPanel.contains(event.target)
-      && !cartToggleButton.contains(event.target)
-    ) {
-      cartPanel.hidden = true;
-    }
-  });
-
-  updateSelectedQuantity();
-  updateCartUI();
   </script>
 </body>
 
