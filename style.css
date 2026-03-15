@@ -37,6 +37,18 @@ a{
     gap: 60px;
 }
 
+.nav_header .left .menu_toggle{
+    display: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    align-items: center;
+}
+
+.nav_header .left .menu_toggle img{
+    width: 16px;
+}
+
 .nav_header .left .logo{
     width: 150px;
 }
@@ -101,6 +113,47 @@ a{
 
 .nav_header .right .avatar{
     width: 50px;
+}
+
+.sidebar_backdrop{
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+    z-index: 30;
+}
+
+.sidebar_menu{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: min(300px, 75vw);
+    background-color: white;
+    z-index: 40;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    box-shadow: 0 16px 30px rgba(29, 32, 38, 0.25);
+}
+
+.sidebar_menu .close_sidebar{
+    width: fit-content;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.sidebar_menu .sidebar_nav{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar_menu .sidebar_nav a{
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dark-blue-font);
 }
 
 .cart_panel{
@@ -391,6 +444,14 @@ a{
         width: 90%;
         border-bottom: none;
         margin-bottom: 0px;
+    }
+
+    .nav_header .left{
+        gap: 18px;
+    }
+
+    .nav_header .left .menu_toggle{
+        display: flex;
     }
 
     .nav_header .left .navbar{

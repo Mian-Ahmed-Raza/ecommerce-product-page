@@ -26,9 +26,13 @@
 
     <div class="left">
 
+      <button type="button" class="menu_toggle" aria-label="Open navigation menu">
+        <img src="/ecommerce-product-page/images/icon-menu.svg" alt="menu">
+      </button>
+
       <a href="#"><img src="/ecommerce-product-page/images/logo.svg" alt="logo" class="logo"></a>
 
-      <nav class="navbar">
+      <nav class="navbar" aria-label="Primary navigation">
         <a href="#">Collections</a>
         <a href="#">Men</a>
         <a href="#">Women</a>
@@ -53,6 +57,22 @@
 
 
   </header>
+
+  <div class="sidebar_backdrop" hidden></div>
+
+  <aside class="sidebar_menu" hidden>
+    <button type="button" class="close_sidebar" aria-label="Close navigation menu">
+      <img src="/ecommerce-product-page/images/icon-close.svg" alt="close menu">
+    </button>
+
+    <nav class="sidebar_nav" aria-label="Sidebar navigation">
+      <a href="#">Collections</a>
+      <a href="#">Men</a>
+      <a href="#">Women</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </aside>
 
   <section class="cart_panel" hidden>
     <h2 class="cart_panel_header">Cart</h2>
@@ -139,6 +159,11 @@
   <script>
     const mainImage = document.querySelector('.main_image');
     const thumbnails = document.querySelectorAll('.thumbnail');
+    const menuToggleButton = document.querySelector('.menu_toggle');
+    const sidebarMenu = document.querySelector('.sidebar_menu');
+    const sidebarBackdrop = document.querySelector('.sidebar_backdrop');
+    const closeSidebarButton = document.querySelector('.close_sidebar');
+    const sidebarLinks = document.querySelectorAll('.sidebar_nav a');
     const previousImageButton = document.querySelector('.prev_image');
     const nextImageButton = document.querySelector('.next_image');
     const decreaseButton = document.querySelector('.decrease');
@@ -194,6 +219,38 @@
         thumbnail.classList.toggle('active', index === currentImageIndex);
       });
     }
+
+    function openSidebar() {
+      sidebarMenu.hidden = false;
+      sidebarBackdrop.hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      sidebarMenu.hidden = true;
+      sidebarBackdrop.hidden = true;
+      document.body.style.overflow = '';
+    }
+
+    menuToggleButton.addEventListener('click', openSidebar);
+    closeSidebarButton.addEventListener('click', closeSidebar);
+    sidebarBackdrop.addEventListener('click', closeSidebar);
+
+    sidebarLinks.forEach((link) => {
+      link.addEventListener('click', closeSidebar);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !sidebarMenu.hidden) {
+        closeSidebar();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768 && !sidebarMenu.hidden) {
+        closeSidebar();
+      }
+    });
 
     thumbnails.forEach((thumbnail, index) => {
       thumbnail.addEventListener('click', () => {
